@@ -18,5 +18,10 @@
   },
   "homepage": "https://github.com/yingliii/Employee-Tracker#readme",
   "devDependencies": {},
-  "keywords": []
+  "keywords": [],
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.1.2",
+    "mysql2": "^2.3.0"
+  }
 }

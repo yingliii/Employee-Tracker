@@ -1,6 +1,6 @@
 module.exports = {
   // initial prompt
-  firstPrompt: {
+  initialPrompt: {
     type: 'list',
     name: 'content',
     message: 'What would you like to do?',
