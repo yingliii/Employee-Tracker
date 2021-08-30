@@ -1,0 +1,22 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "Content management systems employee tracker",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yingliii/Employee-Tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yingliii/Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/yingliii/Employee-Tracker#readme",
+  "devDependencies": {},
+  "keywords": []
+}
