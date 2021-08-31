@@ -29,7 +29,7 @@ module.exports = {
   },
 
   // View prompt by manager
-  viewEmployeeByManager: (managersChoice) => [
+  viewEmployeesByManager: (managersChoice) => [
     {
       type: 'list',
       name: 'managerId',

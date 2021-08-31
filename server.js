@@ -27,8 +27,8 @@ function initialTracker() {
       case 'View All Roles':
         viewAllRoles();
         break;
-      case 'View All Department':
-        viewAllDepartment();
+      case 'View All Departments':
+        viewAllDepartments();
         break;
       case 'View Department Budget':
         viewDepartmentBudget();
@@ -64,6 +64,7 @@ function initialTracker() {
     }
   });
 }
+
 // VIEW all employees
 function viewAllEmployees() {
   console.log(`Viewing all employees: \n`);
@@ -88,6 +89,7 @@ function viewAllEmployees() {
 }
 
 // VIEW employees by manager
+// TODO: Remove NULL?????
 function viewEmployeesByManager() {
   console.log(`Viewing employees by manager: \n`);
 
@@ -122,7 +124,7 @@ function viewEmployeesByManager() {
       connection.query(query, response.managerId, function (err, res) {
         if (err) throw err;
         console.table(res);
-        console.log(`\n ====================BREAK LINE====================\n`);
+        console.log(`====================BREAK LINE====================\n`);
 
         initialTracker();
       });
@@ -151,7 +153,7 @@ function viewEmployeesByDepartment() {
       name: data.name,
     }));
 
-    inquirer.prompt(prompts.departmentPrompt(departmentsChoice)).then(function (response) {
+    inquirer.prompt(prompts.viewEmployeeByDepartment(departmentsChoice)).then(function (response) {
       var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department 
         FROM employee e
         JOIN role r
@@ -164,7 +166,7 @@ function viewEmployeesByDepartment() {
         if (err) throw err;
 
         console.table(res);
-        console.log(`\n ====================BREAK LINE====================\n`);
+        console.log(`====================BREAK LINE====================\n`);
 
         initialTracker();
       });
@@ -178,52 +180,109 @@ function viewAllRoles() {
   connection.query(query, function (err, res) {
     if (err) throw err;
     console.log(`\nAll Roles:\n`);
-    res.forEach((role) => {
-      console.log(`ID: ${role.id} | Title: ${role.title}\n Salary: ${role.salary}\n`);
-    });
-    console.log(`\n ====================BREAK LINE====================\n`);
+
+    console.table(res);
+
+    // res.forEach((role) => {
+    //   console.log(`ID: ${role.id} | Title: ${role.title}\n Salary: ${role.salary}\n`);
+    // });
+    console.log(`====================BREAK LINE====================\n`);
 
     initialTracker();
   });
 }
-
 // VIEW all departments
 function viewAllDepartments() {
-  var query = 'SELECT * FROM department';
+  let query = 'SELECT * FROM department;';
   connection.query(query, function (err, res) {
     if (err) throw err;
-    console.log(`\nAll Departments:\n`);
-    res.forEach((department) => {
-      console.log(`ID: ${department.id} | ${department.name} Department`);
-    });
-    console.log(`\n ====================BREAK LINE====================\n`);
+
+    console.log(`All Departments:`);
+
+    console.table(res);
+
+    console.log(`====================BREAK LINE====================\n`);
 
     initialTracker();
   });
 }
 
 function viewDepartmentBudget() {
-  var query = `SELECT d.name, r.salary, sum(r.salary) AS budget
+  let query = `SELECT d.name, r.salary, sum(r.salary) AS budget
 		FROM employee e 
-		LEFT JOIN role r ON e.role_id = r.id
-		LEFT JOIN department d ON r.department_id = d.id
-		group by d.name`;
+		LEFT JOIN role r 
+        ON e.role_id = r.id
+		LEFT JOIN department d 
+        ON r.department_id = d.id
+        GROUP BY d.name`;
 
   connection.query(query, function (err, res) {
     if (err) throw err;
 
     console.log(`\nDepartments' budgets:\n`);
-    res.forEach((department) => {
-      console.log(`Department: ${department.name}\n Budget: ${department.budget}\n`);
-    });
-    console.log(`\n ====================BREAK LINE====================\n`);
+
+    // res.forEach((department) => {
+    //   console.log(`Department: ${department.name}\n Budget: ${department.budget}\n`);
+    // });
+    console.table(res);
+
+    console.log(`====================BREAK LINE====================\n`);
 
     initialTracker();
   });
 }
 
 // ADD new employees, roles, departments
+/*
+function addEmployee() {
+  let query = ``;
 
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+
+    console.log(`\nAdding Employee:\n`);
+
+    console.table(res);
+
+    console.log(`Successfully added`);
+    console.log(`====================BREAK LINE====================\n`);
+
+    initialTracker();
+  });
+}
+
+function addRole() {
+  let query = ``;
+
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+
+    console.log(`\nAdding Employee:\n`);
+
+    console.table(res);
+
+    console.log(`Successfully added`);
+    console.log(`====================BREAK LINE====================\n`);
+
+    initialTracker();
+  });
+}*/
+
+function addDepartment() {
+  inquirer.prompt(prompts.addDepartment).then(function (response) {
+    let query = `INSERT INTO department (name) VALUES ( ? )`;
+
+    connection.query(query, (err, res) => {
+      if (err) throw err;
+
+      console.log(`\nSuccessfully added ${response.department}!\n`);
+    });
+
+    console.log(`====================BREAK LINE====================\n`);
+
+    viewAllDepartments();
+  });
+}
 // Update employees role or manager
 
 // Remove employees, roles, departments
