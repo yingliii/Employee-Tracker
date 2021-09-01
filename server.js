@@ -69,7 +69,7 @@ function initialTracker() {
 function viewAllEmployees() {
   console.log(`Viewing all employees: \n`);
 
-  var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONTACT(m.first_name, ' ', m.last_name) AS manager
+  var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary
     FROM employee e
     LEFT JOIN role r
     ON e.role_id = r.id

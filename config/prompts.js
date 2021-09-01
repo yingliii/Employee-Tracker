@@ -11,6 +11,7 @@ module.exports = {
       'View Employees by Department',
       'View All Roles',
       'View All Departments',
+      /*
       'View Department Budget',
       // ADDing
       'Add Employee',
@@ -23,6 +24,7 @@ module.exports = {
       'Remove Employee',
       'Remove Role',
       'Remove Department',
+      */
       // EXITing
       'Exit',
     ],
