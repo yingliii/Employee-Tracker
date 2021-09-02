@@ -67,9 +67,9 @@ function initialTracker() {
 
 // VIEW all employees
 function viewAllEmployees() {
-  console.log(`Viewing all employees: \n`);
+  console.log(`\nViewing all employees: \n`);
 
-  var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary
+  var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
     FROM employee e
     LEFT JOIN role r
     ON e.role_id = r.id
@@ -82,7 +82,7 @@ function viewAllEmployees() {
     if (err) throw err;
 
     console.table(res);
-    console.log(`\n ====================BREAK LINE====================\n`);
+    console.log(`====================BREAK LINE====================\n`);
 
     initialTracker();
   });
