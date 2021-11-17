@@ -11,7 +11,6 @@ module.exports = {
       'View Employees by Department',
       'View All Roles',
       'View All Departments',
-      /*
       'View Department Budget',
       // ADDing
       'Add Employee',
@@ -24,7 +23,6 @@ module.exports = {
       'Remove Employee',
       'Remove Role',
       'Remove Department',
-      */
       // EXITing
       'Exit',
     ],
@@ -104,7 +102,7 @@ module.exports = {
     {
       type: 'list',
       name: 'department',
-      message: 'Select the department of the new role',
+      message: 'Select the department for the new role',
       choices: departmentsArray,
     },
   ],
