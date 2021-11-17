@@ -36,6 +36,8 @@ User is required to install below software for this project:
 
 See a live demonstration in the demo section below.
 
+---
+
 ## License
 
 ![license: MIT](https://img.shields.io/badge/license-MIT-orange)\
@@ -47,13 +49,21 @@ See a live demonstration in the demo section below.
 
 ![demonstration of how to use Employee Tracker](./assets/Demo.gif)
 
-### Deployed Site
+#### OR ACCESS THE LINK [HERE](https://watch.screencastify.com/v/O8vbRiid8lCvar5hjEkR)
+
+---
+
+## Deployed Site
 
 https://mighty-garden-66088.herokuapp.com/
+
+---
 
 ## Contributor
 
 :woman: Ying
+
+---
 
 ## Contact
 
