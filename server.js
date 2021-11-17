@@ -80,7 +80,6 @@ function viewAllEmployees() {
 
   connection.query(query, function (err, res) {
     if (err) throw err;
-
     console.table(res);
     console.log(`====================BREAK LINE====================\n`);
 
@@ -164,10 +163,8 @@ function viewEmployeesByDepartment() {
 
       connection.query(query, response.departmentId, function (err, res) {
         if (err) throw err;
-
         console.table(res);
         console.log(`====================BREAK LINE====================\n`);
-
         initialTracker();
       });
     });
@@ -179,15 +176,9 @@ function viewAllRoles() {
   var query = 'SELECT * FROM role';
   connection.query(query, function (err, res) {
     if (err) throw err;
-    console.log(`\nAll Roles:\n`);
-
+    console.log(`\nViewing All Roles:\n`);
     console.table(res);
-
-    // res.forEach((role) => {
-    //   console.log(`ID: ${role.id} | Title: ${role.title}\n Salary: ${role.salary}\n`);
-    // });
     console.log(`====================BREAK LINE====================\n`);
-
     initialTracker();
   });
 }
@@ -197,90 +188,126 @@ function viewAllDepartments() {
   connection.query(query, function (err, res) {
     if (err) throw err;
 
-    console.log(`All Departments:`);
-
+    console.log(`Viewing All Departments:`);
     console.table(res);
-
     console.log(`====================BREAK LINE====================\n`);
-
     initialTracker();
   });
 }
 
 function viewDepartmentBudget() {
-  let query = `SELECT d.name, r.salary, sum(r.salary) AS budget
-		FROM employee e 
-		LEFT JOIN role r 
-        ON e.role_id = r.id
-		LEFT JOIN department d 
-        ON r.department_id = d.id
-        GROUP BY d.name`;
+  let query = `SELECT d.name, sum(r.salary) AS budget
+  FROM employee e 
+  LEFT JOIN role r ON e.role_id = r.id
+  LEFT JOIN department d ON r.department_id = d.id
+  group by d.name`;
 
   connection.query(query, function (err, res) {
     if (err) throw err;
 
-    console.log(`\nDepartments' budgets:\n`);
-
-    // res.forEach((department) => {
-    //   console.log(`Department: ${department.name}\n Budget: ${department.budget}\n`);
-    // });
+    console.log(`\nViewing Departments' budgets:\n`);
     console.table(res);
-
     console.log(`====================BREAK LINE====================\n`);
-
     initialTracker();
   });
 }
 
 // ADD new employees, roles, departments
-/*
-function addEmployee() {
-  let query = ``;
 
-  connection.query(query, (err, res) => {
+function addEmployee() {
+  // Select Employee's Department
+  let departmentsArray = [];
+  connection.query(`SELECT * FROM department`, (err, res) => {
     if (err) throw err;
 
-    console.log(`\nAdding Employee:\n`);
+    res.forEach((element) => {
+      departmentsArray.push(`${element.id} ${element.name}`);
+    });
+    // Select Employee's Role
+    let rolesArray = [];
+    connection.query(`SELECT id, title FROM role`, (err, res) => {
+      if (err) throw err;
 
-    console.table(res);
-
-    console.log(`Successfully added`);
-    console.log(`====================BREAK LINE====================\n`);
-
-    initialTracker();
+      res.forEach((element) => {
+        rolesArray.push(`${element.id} ${element.title}`);
+      });
+      // Select Employee's Manager
+      let managersArray = [];
+      connection.query(`SELECT id, first_name, last_name FROM employee`, (err, res) => {
+        if (err) throw err;
+        res.forEach((element) => {
+          managersArray.push(`${element.id} ${element.first_name} ${element.last_name}`);
+        });
+        // Create New Employee
+        inquirer
+          .prompt(prompts.addEmployee(departmentsArray, rolesArray, managersArray))
+          .then((response) => {
+            // Insert chosen elements into employee array
+            let roleID = parseInt(response.role);
+            let managerID = parseInt(response.manager);
+            connection.query(
+              'INSERT INTO employee SET ?',
+              {
+                first_name: response.firstName,
+                last_name: response.lastName,
+                role_id: roleID,
+                manager_id: managerID,
+              },
+              (err, res) => {
+                if (err) throw err;
+                console.log(`Successfully added a new employee`);
+                console.log(`====================BREAK LINE====================\n`);
+                initialTracker();
+              }
+            );
+          });
+      });
+    });
   });
 }
 
 function addRole() {
-  let query = ``;
+  var query = `SELECT * FROM department`;
 
-  connection.query(query, (err, res) => {
+  connection.query(query, function (err, res) {
     if (err) throw err;
+    // Select department for role
+    const departmentsArray = res.map(({ id, name }) => ({
+      value: id,
+      name: `${id} ${name}`,
+    }));
 
-    console.log(`\nAdding Employee:\n`);
-
-    console.table(res);
-
-    console.log(`Successfully added`);
-    console.log(`====================BREAK LINE====================\n`);
-
-    initialTracker();
+    inquirer.prompt(prompts.addRole(departmentsArray)).then(function (response) {
+      var query = `INSERT INTO role SET ?`;
+      // Insert Title, Salary and Department into Role Array
+      connection.query(
+        query,
+        {
+          title: response.newRole,
+          salary: response.newSalary,
+          department_id: response.department,
+        },
+        function (err, res) {
+          if (err) throw err;
+          console.log(`Successfully added a new role`);
+          console.log(`====================BREAK LINE====================\n`);
+          initialTracker();
+        }
+      );
+    });
   });
-}*/
+}
 
 function addDepartment() {
   inquirer.prompt(prompts.addDepartment).then(function (response) {
-    let query = `INSERT INTO department (name) VALUES ( ? )`;
-
-    connection.query(query, (err, res) => {
+    var query = 'INSERT INTO department (name) VALUES ( ? )';
+    connection.query(query, response.department, function (err, res) {
       if (err) throw err;
-
-      console.log(`\nSuccessfully added ${response.department}!\n`);
+      console.log(`You have added this department: ${response.department.toUpperCase()}.`);
     });
-
+    console.log(`\nSuccessfully added a new department!\n`);
     console.log(`====================BREAK LINE====================\n`);
-
-    viewAllDepartments();
+    initialTracker();
   });
 }
 // Update employees role or manager
